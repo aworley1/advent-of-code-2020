@@ -2,6 +2,21 @@ package day3
 
 import common.readPuzzleInput
 
+data class Slope(val right: Int, val down: Int)
+
+fun main() {
+    println(solvePuzzlePart1(readPuzzleInput("day3.txt"), 3, 1))
+
+    val slopes = listOf(
+        Slope(right = 1, down = 1),
+        Slope(right = 3, down = 1),
+        Slope(right = 5, down = 1),
+        Slope(right = 7, down = 1),
+        Slope(right = 1, down = 2),
+    )
+    println(solvePuzzlePart2(readPuzzleInput("day3.txt"), slopes))
+}
+
 fun solvePuzzlePart1(input: List<String>, stepRight: Int, stepDown: Int): Int {
     val stepRightIterator = generateSequence(0) { it + stepRight }.iterator()
 
@@ -19,12 +34,6 @@ fun solvePuzzlePart2(input: List<String>, slopes: List<Slope>): Long {
         .fold(1L) { acc, i -> acc * i }
 }
 
-data class Slope(val right: Int, val down: Int)
-
-enum class Square {
-    TREE, GAP
-}
-
 class TobogganMap(private val input: List<String>) : Iterable<Row> {
     operator fun get(rowIndex: Int): Row = Row(input[rowIndex])
 
@@ -38,16 +47,6 @@ data class Row(private val row: String) {
         if (row[colIndex % row.length] == '#') Square.TREE else Square.GAP
 }
 
-
-fun main() {
-    println(solvePuzzlePart1(readPuzzleInput("day3.txt"), 3, 1))
-
-    val slopes = listOf(
-        Slope(1, 1),
-        Slope(3, 1),
-        Slope(5, 1),
-        Slope(7, 1),
-        Slope(1, 2),
-    )
-    println(solvePuzzlePart2(readPuzzleInput("day3.txt"), slopes))
+enum class Square {
+    TREE, GAP
 }
