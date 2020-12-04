@@ -11,6 +11,7 @@ val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKN
 val BIRTH_YEAR_RANGE = 1920..2002
 val ISSUE_YEAR_RANGE = 2010..2020
 val EXPIRY_YEAR_RANGE = 2020..2030
+val VALID_EYE_COLOURS = listOf("amb", "blu", "brn", "gry", "grn", "hzl", "oth")
 
 fun solvePart1(input: List<String>): Int = parseInput(input).count { validateRequiredFields(it) }
 
@@ -62,6 +63,10 @@ fun validateExpiryYear(passport: Passport) =
 fun validatePassportId(passport: Passport) =
     if ("[0-9]{9}".toRegex().matches(passport.pid ?: "")) Success(passport)
     else Failure("Invalid Passport ID")
+
+fun validateEyeColour(passport: Passport) =
+    if (VALID_EYE_COLOURS.contains(passport.ecl)) Success(passport)
+    else Failure("Invalid eye colour")
 
 private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
     range.contains(it)

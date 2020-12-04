@@ -88,4 +88,15 @@ internal class Day4KtTest {
         assertThat(validatePassportId(Passport(pid="abcdefghi"))).isFailure()
     }
 
+    @Test
+    fun `eye colour should be an allowed value`() {
+        assertThat(validateEyeColour(Passport(ecl="amb"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="blu"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="brn"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="gry"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="grn"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="hzl"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="oth"))).isSuccess()
+        assertThat(validateEyeColour(Passport(ecl="somethingElse"))).isFailure()
+    }
 }
