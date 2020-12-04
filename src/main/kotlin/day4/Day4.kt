@@ -68,6 +68,10 @@ fun validateEyeColour(passport: Passport) =
     if (VALID_EYE_COLOURS.contains(passport.ecl)) Success(passport)
     else Failure("Invalid eye colour")
 
+fun validateHairColour(passport: Passport) =
+    if ("#[0-9a-f]{6}".toRegex().matches(passport.hcl ?: "")) Success(passport)
+    else Failure("Invalid Hair Colour")
+
 private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
     range.contains(it)
 }

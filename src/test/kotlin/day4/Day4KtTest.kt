@@ -99,4 +99,11 @@ internal class Day4KtTest {
         assertThat(validateEyeColour(Passport(ecl="oth"))).isSuccess()
         assertThat(validateEyeColour(Passport(ecl="somethingElse"))).isFailure()
     }
+
+    @Test
+    fun `hair colour should be a valid value`() {
+        assertThat(validateHairColour(Passport(hcl = "#123abc"))).isSuccess()
+        assertThat(validateHairColour(Passport(hcl = "#123abz"))).isFailure()
+        assertThat(validateHairColour(Passport(hcl = "123abz"))).isFailure()
+    }
 }
