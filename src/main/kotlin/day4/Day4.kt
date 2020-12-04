@@ -3,13 +3,13 @@ package day4
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.natpryce.Failure
-import com.natpryce.Result
 import com.natpryce.Success
 import common.readPuzzleInput
 import kotlin.reflect.full.memberProperties
 
 val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-val YEAR_RANGE = 1920..2002
+val BIRTH_YEAR_RANGE = 1920..2002
+val ISSUE_YEAR_RANGE = 2010..2020
 
 fun solvePart1(input: List<String>): Int = parseInput(input).count { validateRequiredFields(it) }
 
@@ -40,12 +40,20 @@ data class Passport(
     val cid: String? = null,
 )
 
-fun validateBirthYear(passport: Passport): Result<Passport, String> {
-    val validYear = passport.byr?.toIntOrNull()?.let {
-        YEAR_RANGE.contains(it)
-    }
+fun validateBirthYear(passport: Passport) =
+    if (validateYear(passport.byr, BIRTH_YEAR_RANGE) == true)
+        Success(passport)
+    else
+        Failure("Invalid Issue Year")
 
-    return if (validYear == true) Success(passport) else Failure("Invalid Birth Year")
+fun validateIssueYear(passport: Passport) =
+    if (validateYear(passport.iyr, ISSUE_YEAR_RANGE) == true)
+        Success(passport)
+    else
+        Failure("Invalid Issue Year")
+
+private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
+    range.contains(it)
 }
 
 fun main() {
