@@ -38,7 +38,7 @@ internal class Day4KtTest {
             cid = "value"
         )
 
-        assertThat(validateRequiredFields(passport)).isTrue()
+        assertThat(validateRequiredFields(passport)).isSuccess()
     }
 
     @Test
@@ -50,7 +50,7 @@ internal class Day4KtTest {
             cid = "value"
         )
 
-        assertThat(validateRequiredFields(passport)).isFalse()
+        assertThat(validateRequiredFields(passport)).isFailure()
     }
 
     @Test
