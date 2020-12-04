@@ -10,6 +10,7 @@ import kotlin.reflect.full.memberProperties
 val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 val BIRTH_YEAR_RANGE = 1920..2002
 val ISSUE_YEAR_RANGE = 2010..2020
+val EXPIRY_YEAR_RANGE = 2020..2030
 
 fun solvePart1(input: List<String>): Int = parseInput(input).count { validateRequiredFields(it) }
 
@@ -51,6 +52,12 @@ fun validateIssueYear(passport: Passport) =
         Success(passport)
     else
         Failure("Invalid Issue Year")
+
+fun validateExpiryYear(passport: Passport) =
+    if (validateYear(passport.eyr, EXPIRY_YEAR_RANGE) == true)
+        Success(passport)
+    else
+        Failure("Invalid Expiry Year")
 
 private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
     range.contains(it)

@@ -71,5 +71,14 @@ internal class Day4KtTest {
         assertThat(validateIssueYear(Passport(iyr = "abc"))).isFailure()
     }
 
+    @Test
+    fun `expiry year between 2020-2030 inclusive is valid`() {
+        assertThat(validateExpiryYear(Passport(eyr = "2020"))).isSuccess()
+        assertThat(validateExpiryYear(Passport(eyr = "2030"))).isSuccess()
+        assertThat(validateExpiryYear(Passport(eyr = "2019"))).isFailure()
+        assertThat(validateExpiryYear(Passport(eyr = "2031"))).isFailure()
+        assertThat(validateExpiryYear(Passport(eyr = "abc"))).isFailure()
+    }
+
 
 }
