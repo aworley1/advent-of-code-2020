@@ -59,6 +59,10 @@ fun validateExpiryYear(passport: Passport) =
     else
         Failure("Invalid Expiry Year")
 
+fun validatePassportId(passport: Passport) =
+    if ("[0-9]{9}".toRegex().matches(passport.pid ?: "")) Success(passport)
+    else Failure("Invalid Passport ID")
+
 private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
     range.contains(it)
 }

@@ -80,5 +80,12 @@ internal class Day4KtTest {
         assertThat(validateExpiryYear(Passport(eyr = "abc"))).isFailure()
     }
 
+    @Test
+    fun `passport id should be a 9 digit number`() {
+        assertThat(validatePassportId(Passport(pid="012345678"))).isSuccess()
+        assertThat(validatePassportId(Passport(pid="0000000000"))).isFailure()
+        assertThat(validatePassportId(Passport(pid="00000000"))).isFailure()
+        assertThat(validatePassportId(Passport(pid="abcdefghi"))).isFailure()
+    }
 
 }
