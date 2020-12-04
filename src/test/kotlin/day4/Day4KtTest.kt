@@ -106,4 +106,17 @@ internal class Day4KtTest {
         assertThat(validateHairColour(Passport(hcl = "#123abz"))).isFailure()
         assertThat(validateHairColour(Passport(hcl = "123abz"))).isFailure()
     }
+
+    @Test
+    fun `height should be valid`() {
+        assertThat(validateHeight(Passport(hgt = "150cm"))).isSuccess()
+        assertThat(validateHeight(Passport(hgt = "193cm"))).isSuccess()
+        assertThat(validateHeight(Passport(hgt = "59in"))).isSuccess()
+        assertThat(validateHeight(Passport(hgt = "76in"))).isSuccess()
+        assertThat(validateHeight(Passport(hgt = "149cm"))).isFailure()
+        assertThat(validateHeight(Passport(hgt = "194cm"))).isFailure()
+        assertThat(validateHeight(Passport(hgt = "58in"))).isFailure()
+        assertThat(validateHeight(Passport(hgt = "77in"))).isFailure()
+        assertThat(validateHeight(Passport(hgt = "190"))).isFailure()
+    }
 }
