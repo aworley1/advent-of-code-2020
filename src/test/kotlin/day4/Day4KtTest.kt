@@ -9,43 +9,44 @@ import org.junit.jupiter.api.Test
 internal class Day4KtTest {
     @Test
     fun `should parse passports into maps`() {
-        val input =
-            "field1:value1 field2:value2\n" +
-                    "field3:value3\n" +
-                    "\n" +
-                    "field4:value4 field5:value5\n"
+        val input = listOf(
+            "byr:value1 iyr:value2",
+            "eyr:value3",
+            "",
+            "hgt:value4 hcl:value5"
+        )
 
         val result = parseInput(input)
 
-        assertThat(result[0]).isEqualTo(mapOf("field1" to "value1", "field2" to "value2", "field3" to "value3"))
-        assertThat(result[1]).isEqualTo(mapOf("field4" to "value4", "field5" to "value5"))
+        assertThat(result[0]).isEqualTo(Passport(byr = "value1", iyr = "value2", eyr = "value3"))
+        assertThat(result[1]).isEqualTo(Passport(hgt = "value4", hcl = "value5"))
     }
 
     @Test
     fun `should validate passport with all fields`() {
-        val passport = mapOf(
-            "byr" to "value",
-            "iyr" to "value",
-            "eyr" to "value",
-            "hgt" to "value",
-            "hcl" to "value",
-            "ecl" to "value",
-            "pid" to "value",
-            "cid" to "value"
+        val passport = Passport(
+            byr = "value",
+            iyr = "value",
+            eyr = "value",
+            hgt = "value",
+            hcl = "value",
+            ecl = "value",
+            pid = "value",
+            cid = "value"
         )
 
-        assertThat(validate(passport)).isTrue()
+        assertThat(validateRequiredFields(passport)).isTrue()
     }
 
     @Test
     fun `should not validate passport with missing fields`() {
-        val passport = mapOf(
-            "hcl" to "value",
-            "ecl" to "value",
-            "pid" to "value",
-            "cid" to "value"
+        val passport = Passport(
+            hcl = "value",
+            ecl = "value",
+            pid = "value",
+            cid = "value"
         )
 
-        assertThat(validate(passport)).isFalse()
+        assertThat(validateRequiredFields(passport)).isFalse()
     }
 }

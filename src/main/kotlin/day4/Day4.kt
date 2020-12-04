@@ -1,27 +1,42 @@
 package day4
 
-import common.readPuzzleInputString
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import common.readPuzzleInput
+import kotlin.reflect.full.memberProperties
 
-val MANDATORY_FIELDS = listOf("byr","iyr","eyr","hgt","hcl","ecl","pid")
+val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-fun solvePart1(input: String): Int = parseInput(input).count { validate(it) }
+fun solvePart1(input: List<String>): Int = parseInput(input).count { validateRequiredFields(it) }
 
-fun validate(passport: Map<String,String>) = passport.keys.containsAll(MANDATORY_FIELDS)
+fun validateRequiredFields(passport: Passport) = passport::class.memberProperties
+    .filterNot { it.name == "cid" }
+    .all { it.getter.call(passport) != null }
 
-fun parseInput(input:String): List<Map<String, String>> {
-    return input.split("\n\n")
-        .map {
-            it.split("[\n ]".toRegex())
-                .mapNotNull {
-                    if (it.isEmpty()) null else {
-                        val split = it.split(":")
-                        split[0] to split[1]
-                    }
+fun parseInput(input: List<String>): List<Passport> {
+    return input.joinToString("|").split("||")
+        .map { passport ->
+            passport.replace("|", " ")
+                .split(" ")
+                .map { field ->
+                    field.split(":").let { (key, value) -> key to value }
                 }.toMap()
         }
+        .map { mapper.convertValue(it, Passport::class.java) }
 }
 
+data class Passport(
+    val byr: String? = null,
+    val iyr: String? = null,
+    val eyr: String? = null,
+    val hgt: String? = null,
+    val hcl: String? = null,
+    val ecl: String? = null,
+    val pid: String? = null,
+    val cid: String? = null,
+)
+
 fun main() {
-    println(solvePart1(readPuzzleInputString("day4.txt")))
+    println(solvePart1(readPuzzleInput("day4.txt")))
 }
 
