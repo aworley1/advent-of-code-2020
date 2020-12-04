@@ -4,7 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import matchers.isFailure
+import matchers.isSuccess
 import org.junit.jupiter.api.Test
+
 
 internal class Day4KtTest {
     @Test
@@ -49,4 +52,15 @@ internal class Day4KtTest {
 
         assertThat(validateRequiredFields(passport)).isFalse()
     }
+
+    @Test
+    fun `birth year between 1920-2002 inclusive is valid`() {
+        assertThat(validateBirthYear(Passport(byr = "1920"))).isSuccess()
+        assertThat(validateBirthYear(Passport(byr = "2002"))).isSuccess()
+        assertThat(validateBirthYear(Passport(byr = "1919"))).isFailure()
+        assertThat(validateBirthYear(Passport(byr = "2003"))).isFailure()
+        assertThat(validateBirthYear(Passport(byr = "abc"))).isFailure()
+    }
+
+
 }
