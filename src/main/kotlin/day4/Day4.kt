@@ -24,8 +24,7 @@ fun solvePart2(input: List<String>): Int = parseInput(input).count { validatePas
 fun parseInput(input: List<String>): List<Passport> {
     return input.joinToString("|").split("||")
         .map { passport ->
-            passport.replace("|", " ")
-                .split(" ")
+            passport.split('|', ' ')
                 .map { field ->
                     field.split(":").let { (key, value) -> key to value }
                 }.toMap()
@@ -52,35 +51,26 @@ fun validateRequiredFields(passport: Passport): Result<Passport, String> {
 }
 
 fun validateBirthYear(passport: Passport) =
-    if (validateYear(passport.byr, BIRTH_YEAR_RANGE) == true)
-        Success(passport)
-    else
-        Failure("Invalid Issue Year")
+    if (passport.byr.inRange(BIRTH_YEAR_RANGE)) Success(passport)
+    else Failure("Invalid Issue Year")
 
 fun validateIssueYear(passport: Passport) =
-    if (validateYear(passport.iyr, ISSUE_YEAR_RANGE) == true)
-        Success(passport)
-    else
-        Failure("Invalid Issue Year")
+    if (passport.iyr.inRange(ISSUE_YEAR_RANGE)) Success(passport)
+    else Failure("Invalid Issue Year")
 
 fun validateExpiryYear(passport: Passport) =
-    if (validateYear(passport.eyr, EXPIRY_YEAR_RANGE) == true)
-        Success(passport)
-    else
-        Failure("Invalid Expiry Year")
+    if (passport.eyr.inRange(EXPIRY_YEAR_RANGE)) Success(passport)
+    else Failure("Invalid Expiry Year")
 
 fun validateHeight(passport: Passport): Result<Passport, String> {
-    if (passport.hgt?.endsWith("in") == true) {
-        val number = passport.hgt.dropLast(2).toIntOrNull()
-        if (HEIGHT_RANGE_INS.contains(number)) return Success(passport)
-    }
+    val value = passport.hgt?.dropLast(2)
+    val unit = passport.hgt?.takeLast(2)
 
-    if (passport.hgt?.endsWith("cm") == true) {
-        val number = passport.hgt.dropLast(2).toIntOrNull()
-        if (HEIGHT_RANGE_CMS.contains(number)) return Success(passport)
+    return when (unit) {
+        "cm" -> if (value.inRange(HEIGHT_RANGE_CMS)) Success(passport) else Failure("Invalid Height")
+        "in" -> if (value.inRange(HEIGHT_RANGE_INS)) Success(passport) else Failure("Invalid Height")
+        else -> Failure("Invalid Height")
     }
-
-    return Failure("Invalid Height")
 }
 
 fun validateHairColour(passport: Passport) =
@@ -111,8 +101,8 @@ data class Passport(
     val cid: String? = null,
 )
 
-private fun validateYear(year: String?, range: IntRange) = year?.toIntOrNull()?.let {
+private fun String?.inRange(range: IntRange) = this?.toIntOrNull()?.let {
     range.contains(it)
-}
+} ?: false
 
 private fun Regex.matches(input: String?) = matches(input ?: "")
