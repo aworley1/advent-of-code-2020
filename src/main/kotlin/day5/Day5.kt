@@ -4,17 +4,13 @@ import common.readPuzzleInput
 
 fun part1(input: List<String>) = input.map { findSeatId(it) }.maxOrNull()
 
-fun part2(input: List<String>): Int {
-    val seats = input.map { findSeatId(it) }.sorted()
-    var previousSeat = seats.first() - 1
-    for (seat in seats) {
-        if (seat != previousSeat + 1) {
-            return seat - 1
-        }
-        previousSeat = seat
-    }
-    return 0
-}
+fun part2(input: List<String>) =
+    input.asSequence()
+        .map { findSeatId(it) }
+        .sorted()
+        .windowed(2)
+        .first { it[0] + 1 != it[1] }
+        .first() + 1
 
 fun findSeatId(input: String): Int {
     val rowId = findRow(input.take(7))
