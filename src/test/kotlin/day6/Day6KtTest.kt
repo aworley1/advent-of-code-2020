@@ -3,6 +3,7 @@ package day6
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.containsOnly
+import assertk.assertions.isEmpty
 import org.junit.jupiter.api.Test
 
 internal class Day6KtTest {
@@ -29,5 +30,18 @@ internal class Day6KtTest {
 
         assertThat(result[0]).containsOnly('a','b', 'c','d','e')
         assertThat(result[1]).containsOnly('a','b', 'c','d')
+    }
+
+    @Test
+    fun `should find common answers in a group`() {
+        val groups = listOf(
+            listOf("eabc", "cde"),
+            listOf("ab", "cd")
+        )
+
+        val result = commonAnswersPerGroup(groups)
+
+        assertThat(result[0]).containsOnly('c', 'e')
+        assertThat(result[1]).isEmpty()
     }
 }
