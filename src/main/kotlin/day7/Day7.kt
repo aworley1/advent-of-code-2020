@@ -1,12 +1,30 @@
 package day7
 
+import common.readPuzzleInput
+
+fun main() {
+    println(solvePart1(readPuzzleInput("day7.txt")))
+}
+
+fun solvePart1(input: List<String>): Int = bagsWhichCanHoldMyBag("shiny gold", parse(input)).size
+
+fun bagsWhichCanHoldMyBag(colour: String, rules: List<Rule>): Set<String> {
+    val holdBagDirectly = rules
+        .filter { it.canContain.any { it.colour == colour } }
+        .map { it.colour }
+        .toSet()
+
+    val holdBagIndirectly = holdBagDirectly.map { bagsWhichCanHoldMyBag(it, rules) }.flatten().toSet()
+
+    return holdBagDirectly + holdBagIndirectly
+}
+
 fun parse(input: List<String>): List<Rule> {
     return input.map {
         val (colour, rest) = it.split(" bags contain")
 
         val colourCounts = if (rest.startsWith(" no other")) emptyList() else
             rest.split(",").map {
-                println(it)
                 val (num, col1, col2) = it.trim().split(" ")
                 ColourCount("$col1 $col2", num.toInt())
             }
