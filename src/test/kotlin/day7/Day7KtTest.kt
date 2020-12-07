@@ -3,6 +3,7 @@ package day7
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsOnly
+import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 
@@ -85,5 +86,69 @@ internal class Day7KtTest {
         val result = bagsWhichCanHoldMyBag(myBagColour, rules)
 
         assertThat(result).containsOnly("red", "green", "pink")
+    }
+
+    @Test
+    fun `should solve part 2 example`() {
+        val rules = listOf(
+            Rule("shiny gold", listOf(ColourCount("dark red", 2))),
+            Rule("dark red", listOf(ColourCount("dark orange", 2))),
+            Rule("dark orange", listOf(ColourCount("dark yellow", 2))),
+            Rule("dark yellow", listOf(ColourCount("dark green", 2))),
+            Rule("dark green", listOf(ColourCount("dark blue", 2))),
+            Rule("dark blue", listOf(ColourCount("dark violet", 2))),
+            Rule("dark violet", emptyList()),
+        )
+
+        val result = myBagContains("shiny gold", rules).sumBy { it.count }
+
+        assertThat(result).isEqualTo(126)
+    }
+
+    @Test
+    fun `should find the bags directly in my bag`() {
+        val rules = listOf(
+            Rule("red", listOf(ColourCount("yellow", 2), ColourCount("blue", 2))),
+            Rule("blue", emptyList()),
+            Rule("green", listOf(ColourCount("pink", 2), ColourCount("orange", 2))),
+        )
+
+        val result = myBagContains("red", rules)
+
+        assertThat(result).containsOnly(ColourCount("yellow", 2), ColourCount("blue", 2))
+    }
+
+    @Test
+    fun `should find children of the bags directly in my bag`() {
+        val rules = listOf(
+            Rule("red", listOf(ColourCount("yellow", 2), ColourCount("blue", 2))),
+            Rule("yellow", listOf(ColourCount("mauve", 2))),
+            Rule("blue", emptyList())
+        )
+
+        val result = myBagContains("red", rules)
+
+        assertThat(result).containsOnly(
+            ColourCount("yellow", 2),
+            ColourCount("blue", 2),
+            ColourCount("mauve", 4),
+        )
+    }
+
+    @Test
+    fun `should find children of children of the bags directly in my bag`() {
+        val rules = listOf(
+            Rule("red", listOf(ColourCount("yellow", 2))),
+            Rule("yellow", listOf(ColourCount("mauve", 2))),
+            Rule("mauve", listOf(ColourCount("emerald", 2)))
+        )
+
+        val result = myBagContains("red", rules)
+
+        assertThat(result).containsOnly(
+            ColourCount("yellow", 2),
+            ColourCount("mauve", 4),
+            ColourCount("emerald", 8),
+        )
     }
 }

@@ -4,9 +4,12 @@ import common.readPuzzleInput
 
 fun main() {
     println(solvePart1(readPuzzleInput("day7.txt")))
+    println(solvePart2(readPuzzleInput("day7.txt")))
 }
 
 fun solvePart1(input: List<String>): Int = bagsWhichCanHoldMyBag("shiny gold", parse(input)).size
+
+fun solvePart2(input: List<String>): Int = myBagContains("shiny gold", parse(input)).sumBy { it.count }
 
 fun bagsWhichCanHoldMyBag(colour: String, rules: List<Rule>): Set<String> {
     val holdBagDirectly = rules
@@ -17,6 +20,17 @@ fun bagsWhichCanHoldMyBag(colour: String, rules: List<Rule>): Set<String> {
     val holdBagIndirectly = holdBagDirectly.map { bagsWhichCanHoldMyBag(it, rules) }.flatten().toSet()
 
     return holdBagDirectly + holdBagIndirectly
+}
+
+fun myBagContains(colour: String, rules: List<Rule>): List<ColourCount> {
+    val directlyInBag = rules.single { it.colour == colour }.canContain
+    return directlyInBag + directlyInBag.flatMap { findDescendents(it, rules) }
+}
+
+private fun findDescendents(colourCount: ColourCount, rules: List<Rule>): List<ColourCount> {
+    val directDescendents = rules.filter { it.colour == colourCount.colour }
+        .flatMap { it.canContain.map { it.copy(count = it.count * colourCount.count) } }
+    return directDescendents + directDescendents.flatMap { findDescendents(it, rules) }
 }
 
 fun parse(input: List<String>): List<Rule> {
