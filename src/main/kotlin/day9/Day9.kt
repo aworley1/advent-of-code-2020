@@ -3,8 +3,9 @@ package day9
 import common.readPuzzleInput
 
 fun main() {
-    println(solvePart1(readPuzzleInput("day9.txt").map { it.toLong() }, 25))
-    println(solvePart2(readPuzzleInput("day9.txt").map { it.toLong() }, 70639851))
+    val part1Answer = solvePart1(readPuzzleInput("day9.txt").map { it.toLong() }, 25)
+    println(part1Answer)
+    println(solvePart2(readPuzzleInput("day9.txt").map { it.toLong() }, part1Answer))
 }
 
 fun numberCombinations(input: List<Long>): Set<Long> {
