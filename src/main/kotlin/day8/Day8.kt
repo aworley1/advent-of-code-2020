@@ -35,13 +35,12 @@ fun solvePart2(input: List<String>): Int {
     val parsedInput = parse(input)
     val inputs = parsedInput.mapIndexed { outerIndex, _ ->
         parsedInput.mapIndexed { innerIndex, instruction ->
-            if (innerIndex == outerIndex) instruction.flip() else instruction
+            if (innerIndex == outerIndex) instruction.flip() else instruction.copy()
         }
     }
 
 
     return inputs.mapNotNull {
-        it.forEach { it.timesRun = 0 }
         solvePart1(it)
     }.single()
 
