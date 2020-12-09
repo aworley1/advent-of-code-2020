@@ -44,4 +44,34 @@ internal class Day9KtTest {
 
         assertThat(result).isEqualTo(127)
     }
+
+    @Test
+    fun `should solve example 2`() {
+        val input = listOf(
+            35.toLong(),
+            20.toLong(),
+            15.toLong(),
+            25.toLong(),
+            47.toLong(),
+            40.toLong(),
+            62.toLong(),
+            55.toLong(),
+            65.toLong(),
+            95.toLong(),
+            102.toLong(),
+            117.toLong(),
+            150.toLong(),
+            182.toLong(),
+            127.toLong(),
+            219.toLong(),
+            299.toLong(),
+            277.toLong(),
+            309.toLong(),
+            576.toLong(),
+        )
+
+        val result = solvePart2(input, 127)
+
+        assertThat(result).isEqualTo(62)
+    }
 }

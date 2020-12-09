@@ -4,6 +4,7 @@ import common.readPuzzleInput
 
 fun main() {
     println(solvePart1(readPuzzleInput("day9.txt").map { it.toLong() }, 25))
+    println(solvePart2(readPuzzleInput("day9.txt").map { it.toLong() }, 70639851))
 }
 
 fun numberCombinations(input: List<Long>): Set<Long> {
@@ -25,6 +26,16 @@ fun solvePart1(input: List<Long>, preambleSize: Int): Long {
             val current = it.takeLast(1).single()
             if (!allowedNumbers.contains(current)) return current
         }
+
+    throw RuntimeException("Not found")
+}
+
+fun solvePart2(input: List<Long>, target: Long): Long {
+    (2..100).flatMap {
+        input.windowed(it)
+    }.forEach {
+        if (it.sum() == target) return it.minOrNull()!! + it.maxOrNull()!!
+    }
 
     throw RuntimeException("Not found")
 }
