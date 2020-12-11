@@ -5,6 +5,7 @@ import day11.State.EMPTY
 import day11.State.FLOOR
 import day11.State.OCCUPIED
 
+
 fun main() {
     println(solvePart1(readPuzzleInput("day11.txt")))
 }
@@ -40,6 +41,17 @@ fun List<Space>.findNeighbours(space: Space): List<Space> = this.filter {
             it.y >= space.y - 1 && it.y <= space.y + 1
 }.filterNot { it.x == space.x && it.y == space.y }
 
+fun List<Space>.findNeighboursImproved(space: Space): List<Space> =
+    Direction.values()
+        .map { direction ->
+            val spacesInDirection = generateSequence(space) { currentSpace ->
+                this.singleOrNull { it.x == currentSpace.x + direction.x && it.y == currentSpace.y + direction.y }
+            }
+
+            spacesInDirection.filterNot { it == space }
+                .first { it.state.isSeat() }
+        }
+
 fun List<Space>.toDisplay(): List<String> = this.groupBy { it.y }
     .toSortedMap()
     .map {
@@ -59,8 +71,23 @@ data class Space(val x: Int, val y: Int, val state: State) {
 enum class State(val code: Char) {
     EMPTY('L'), OCCUPIED('#'), FLOOR('.');
 
+    fun isSeat(): Boolean {
+        return this == EMPTY || this == OCCUPIED
+    }
+
     companion object {
         fun from(char: Char): State = values().singleOrNull { it.code == char }
             ?: throw RuntimeException("Invalid code")
     }
+}
+
+enum class Direction(val x: Int, val y: Int) {
+    UP(0, 1),
+    DOWN(0, -1),
+    LEFT(-1, 0),
+    RIGHT(1, 0),
+    UPLEFT(-1, 1),
+    UPRIGHT(1, 1),
+    DOWNLEFT(-1, -1),
+    DOWNRIGHT(1, -1),
 }

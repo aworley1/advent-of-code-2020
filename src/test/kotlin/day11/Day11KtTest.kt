@@ -165,4 +165,29 @@ internal class Day11KtTest {
 
         assertThat(solvePart1(input)).isEqualTo(37)
     }
+
+    @Test
+    fun `should find neighbours which are not in adjacent squares`() {
+        val input = parse(
+            listOf(
+                "#.#.#",
+                ".....",
+                "#.#.#",
+                ".....",
+                "#.#.#",
+            )
+        )
+        val result = input.findNeighboursImproved(Space(2, 2, OCCUPIED))
+
+        assertThat(result).containsOnly(
+            Space(0,0,OCCUPIED),
+            Space(2,0,OCCUPIED),
+            Space(4,0,OCCUPIED),
+            Space(0,2,OCCUPIED),
+            Space(4,2,OCCUPIED),
+            Space(0,4,OCCUPIED),
+            Space(2,4,OCCUPIED),
+            Space(4,4,OCCUPIED),
+        )
+    }
 }
