@@ -2,6 +2,7 @@ package day11
 
 import assertk.assertThat
 import assertk.assertions.containsOnly
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import day11.State.EMPTY
 import day11.State.FLOOR
@@ -139,7 +140,7 @@ internal class Day11KtTest {
         )
 
 
-        val neighbours = plan.findNeighbours(Space(1, 1, OCCUPIED))
+        val neighbours = plan.neighbourFinder(Space(1, 1, OCCUPIED))
 
         assertThat(neighbours.map { it.x to it.y }).containsOnly(
             0 to 0, 0 to 1, 0 to 2,
@@ -177,17 +178,26 @@ internal class Day11KtTest {
                 "#.#.#",
             )
         )
-        val result = input.findNeighboursImproved(Space(2, 2, OCCUPIED))
+
+        val result = input.neighbourFinderPart2(Space(2, 2, OCCUPIED))
 
         assertThat(result).containsOnly(
-            Space(0,0,OCCUPIED),
-            Space(2,0,OCCUPIED),
-            Space(4,0,OCCUPIED),
-            Space(0,2,OCCUPIED),
-            Space(4,2,OCCUPIED),
-            Space(0,4,OCCUPIED),
-            Space(2,4,OCCUPIED),
-            Space(4,4,OCCUPIED),
+            Space(0, 0, OCCUPIED),
+            Space(2, 0, OCCUPIED),
+            Space(4, 0, OCCUPIED),
+            Space(0, 2, OCCUPIED),
+            Space(4, 2, OCCUPIED),
+            Space(0, 4, OCCUPIED),
+            Space(2, 4, OCCUPIED),
+            Space(4, 4, OCCUPIED),
         )
+    }
+
+    @Test
+    fun `should handle no neighbours`() {
+        val input = parse(listOf("..."))
+
+        assertThat(input.neighbourFinderPart2(Space(0, 0, FLOOR))).isEmpty()
+
     }
 }

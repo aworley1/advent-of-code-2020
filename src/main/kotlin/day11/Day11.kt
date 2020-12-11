@@ -5,15 +5,20 @@ import day11.State.EMPTY
 import day11.State.FLOOR
 import day11.State.OCCUPIED
 
+typealias NeighbourFinder = List<Space>.(Space) -> List<Space>
 
 fun main() {
     println(solvePart1(readPuzzleInput("day11.txt")))
+    println(solvePart2(readPuzzleInput("day11.txt")))
 }
 
-fun solvePart1(input: List<String>): Int {
+fun solvePart1(input: List<String>) = solve(input, List<Space>::neighbourFinder, 4)
+fun solvePart2(input: List<String>) = solve(input, List<Space>::neighbourFinderPart2, 5)
+
+fun solve(input: List<String>, neighbourFinder: NeighbourFinder, neighbourThreshold: Int): Int {
     var plan = parse(input)
     while (true) {
-        val newPlan = plan.next()
+        val newPlan = plan.next(neighbourFinder, neighbourThreshold)
         if (plan == newPlan) return plan.count { it.state == OCCUPIED }
         plan = newPlan
     }
@@ -27,29 +32,32 @@ fun parse(input: List<String>): List<Space> {
     }
 }
 
-fun List<Space>.next(): List<Space> = this.map {
+fun List<Space>.next(
+    findNeighbours: NeighbourFinder = List<Space>::neighbourFinder,
+    neighbourThreshold: Int = 4
+): List<Space> = this.map {
     val neighbours = findNeighbours(it)
     when (it.state) {
-        OCCUPIED -> if (neighbours.count { it.state == OCCUPIED } >= 4) it.switch() else it
+        OCCUPIED -> if (neighbours.count { it.state == OCCUPIED } >= neighbourThreshold) it.switch() else it
         EMPTY -> if (neighbours.none { it.state == OCCUPIED }) it.switch() else it
         FLOOR -> it
     }
 }
 
-fun List<Space>.findNeighbours(space: Space): List<Space> = this.filter {
+fun List<Space>.neighbourFinder(space: Space): List<Space> = this.filter {
     it.x >= space.x - 1 && it.x <= space.x + 1 &&
             it.y >= space.y - 1 && it.y <= space.y + 1
 }.filterNot { it.x == space.x && it.y == space.y }
 
-fun List<Space>.findNeighboursImproved(space: Space): List<Space> =
+fun List<Space>.neighbourFinderPart2(space: Space): List<Space> =
     Direction.values()
-        .map { direction ->
+        .mapNotNull { direction ->
             val spacesInDirection = generateSequence(space) { currentSpace ->
                 this.singleOrNull { it.x == currentSpace.x + direction.x && it.y == currentSpace.y + direction.y }
             }
 
             spacesInDirection.filterNot { it == space }
-                .first { it.state.isSeat() }
+                .firstOrNull { it.state.isSeat() }
         }
 
 fun List<Space>.toDisplay(): List<String> = this.groupBy { it.y }
