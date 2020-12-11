@@ -55,6 +55,20 @@ internal class Day10KtTest {
         assertThat(solvePart2(secondExample)).isEqualTo(19208)
     }
 
+    @Test
+    fun `should find number of combinations working backwards from biggest number`() {
+        val list = listOf(0, 1, 2, 7, 3, 6)
+
+        val result = numberOfCombinationsForEachNumber(list)
+
+        assertThat(result[7]).isEqualTo(1L)
+        assertThat(result[6]).isEqualTo(1L)
+        assertThat(result[3]).isEqualTo(1L)
+        assertThat(result[2]).isEqualTo(1L)
+        assertThat(result[1]).isEqualTo(2L)
+        assertThat(result[0]).isEqualTo(4L)
+    }
+
     private val secondExample = listOf(
         28,
         33,

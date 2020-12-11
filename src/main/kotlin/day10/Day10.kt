@@ -28,20 +28,23 @@ fun solvePart1(input: List<Int>): Int {
 }
 
 fun solvePart2(adapters: List<Int>): Long {
-    val counter = AtomicLong(0)
-    val terminalAdapter = adapters.maxOrNull()!!
-    val validAdapters = buildValidNextAdapters(adapters + 0)
-
-    doSomething(0, validAdapters, terminalAdapter, counter)
-
-    return counter.get()
+    return numberOfCombinationsForEachNumber(adapters + 0)[0]!!
 }
 
-fun doSomething(adapter: Int, nextAdapters: Map<Int, List<Int>>, terminalAdapter: Int, counter: AtomicLong) {
-    if (adapter == terminalAdapter) counter.incrementAndGet()
-    nextAdapters[adapter]!!.forEach {
-        doSomething(it, nextAdapters, terminalAdapter, counter)
+fun numberOfCombinationsForEachNumber(adapters: List<Int>): Map<Int, Long> {
+    val mapOfCombinations = mutableMapOf<Int, Long>()
+    val targetAdapter = adapters.maxOrNull()!!
+    adapters.sortedDescending().forEach {
+        val validNextAdapters = validNext(it, adapters)
+        val combinations = if (it == targetAdapter) 1L
+        else {
+            validNextAdapters.map { mapOfCombinations[it]!! }.sum()
+        }
+
+        mapOfCombinations[it] = combinations
     }
+
+    return mapOfCombinations
 }
 
 fun main() {
